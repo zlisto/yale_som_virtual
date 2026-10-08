@@ -1,0 +1,6 @@
+node_modules/
+dist/
+.env
+.env.*
+# raw walk-through photos (people in shot) stay local
+reference/

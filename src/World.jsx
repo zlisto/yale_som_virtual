@@ -3,7 +3,7 @@ import { useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js'
 import {
-  H, BOUNDS, COURTYARD, DRUMS, DRUM_WALL, WALLS, CHAIRS, SCREENS, BOARDS, LECTERNS,
+  H, EAST, BOUNDS, COURTYARD, DRUMS, DRUM_WALL, WALLS, CHAIRS, SCREENS, BOARDS, LECTERNS,
   STAIRS, MEETING, BEIN, BEIN_TABLES, PLANTS, LIBRARY, inPoly, ellPt,
 } from './layout.js'
 import * as T from './textures.js'
@@ -236,8 +236,8 @@ function OutsideTrees({ M }) {
       const side = Math.floor(r() * 4)
       let x
       let z
-      if (side === 0) [x, z] = [-45 - r() * 40, -60 + r() * 120]
-      else if (side === 1) [x, z] = [40 + r() * 40, -60 + r() * 120]
+      if (side === 0) [x, z] = [-48 - r() * 40, -60 + r() * 120]
+      else if (side === 1) [x, z] = [46 + r() * 40, -60 + r() * 120]
       else if (side === 2) [x, z] = [-45 + r() * 120, -58 - r() * 30]
       else [x, z] = [-45 + r() * 120, 58 + r() * 30]
       out.push([x, z, 3 + r() * 3])
@@ -268,24 +268,31 @@ function Drums({ M }) {
     return g
   }, [])
   return DRUMS.map((d, i) => {
-    const { c, rx, rz, phi, gap } = d
-    const e1 = ellPt(c, rx, rz, phi + gap)
-    const e2 = ellPt(c, rx, rz, phi - gap)
-    const tr = [(e1[0] + e2[0]) / 2, (e1[1] + e2[1]) / 2]
-    const trLen = Math.hypot(e1[0] - e2[0], e1[1] - e2[1])
-    const sp = ellPt(c, rx + 0.03, rz + 0.03, phi + gap + 0.16)
+    const { c, rx, rz, gap, doors, arcs } = d
+    const sp = ellPt(c, rx + 0.03, rz + 0.03, doors[0] + gap + 0.16)
     const n = [sp[0] - c[0], sp[1] - c[1]]
     return (
       <group key={d.id}>
-        <Arc c={c} rx={rx} rz={rz} a0={phi + gap} a1={phi + TAU - gap} material={M.drum} />
-        <Arc c={c} rx={rx - DRUM_WALL} rz={rz - DRUM_WALL} a0={phi + gap} a1={phi + TAU - gap} material={M.drumIn} />
-        <mesh
-          material={M.frosted}
-          position={[tr[0], (2.45 + H) / 2, tr[1]]}
-          rotation={[0, -Math.atan2(e2[1] - e1[1], e2[0] - e1[0]), 0]}
-        >
-          <boxGeometry args={[trLen, H - 2.45, 0.08]} />
-        </mesh>
+        {arcs.map(([a0, a1], j) => (
+          <group key={j}>
+            <Arc c={c} rx={rx} rz={rz} a0={a0} a1={a1} material={M.drum} />
+            <Arc c={c} rx={rx - DRUM_WALL} rz={rz - DRUM_WALL} a0={a0} a1={a1} material={M.drumIn} />
+          </group>
+        ))}
+        {doors.map((a, j) => {
+          const e1 = ellPt(c, rx, rz, a + gap)
+          const e2 = ellPt(c, rx, rz, a - gap)
+          return (
+            <mesh
+              key={j}
+              material={M.frosted}
+              position={[(e1[0] + e2[0]) / 2, (2.45 + H) / 2, (e1[1] + e2[1]) / 2]}
+              rotation={[0, -Math.atan2(e2[1] - e1[1], e2[0] - e1[0]), 0]}
+            >
+              <boxGeometry args={[Math.hypot(e1[0] - e2[0], e1[1] - e2[1]), H - 2.45, 0.08]} />
+            </mesh>
+          )
+        })}
         <mesh geometry={disc} material={M.roomCarpet} position={[c[0], 0.004, c[1]]} scale={[rx - DRUM_WALL, 1, rz - DRUM_WALL]} />
         <Plane p={[sp[0], 1.55, sp[1]]} rot={Math.atan2(n[0], n[1])} w={0.5} h={0.62} material={signs[i]} />
       </group>
@@ -362,9 +369,9 @@ function Beinecke({ M }) {
           <cylinderGeometry args={[0.8, 0.8, 0.04, 32]} />
         </mesh>
       ))}
-      <Plane p={[21.88, 1.55, -2.0]} rot={-Math.PI / 2} w={0.5} h={0.62} material={sign} />
+      <Plane p={[EAST - 0.12, 1.55, -2.0]} rot={-Math.PI / 2} w={0.5} h={0.62} material={sign} />
       <Plane p={[LIBRARY.x1 + 0.08, 1.55, 2.0]} rot={Math.PI / 2} w={0.5} h={0.62} material={libSign} />
-      <Plane p={[21.85, 2.3, 14.8]} rot={-Math.PI / 2} w={3.2} h={3.6} material={M.poster} />
+      <Plane p={[EAST - 0.15, 2.3, 14.8]} rot={-Math.PI / 2} w={3.2} h={3.6} material={M.poster} />
     </>
   )
 }
@@ -408,8 +415,8 @@ function Details({ M }) {
     const { xMin, xMax, zMin, zMax } = BOUNDS
     for (let x = xMin + 1.2; x < xMax; x += 2.4)
       for (let z = zMin + 1.2; z < zMax; z += 2.4) if (!inPoly(x, z, COURTYARD)) out.push({ p: [x, H - 0.01, z] })
-    for (let x = 23; x < 31.5; x += 2.4)
-      for (let z = -9; z < 9.5; z += 2.4) if (Math.hypot(x - 22, z) < 9.3) out.push({ p: [x, H - 0.01, z] })
+    for (let x = EAST + 1; x < EAST + 9.5; x += 2.4)
+      for (let z = -9; z < 9.5; z += 2.4) if (Math.hypot(x - EAST, z) < 9.3) out.push({ p: [x, H - 0.01, z] })
     return out
   }, [])
   const lampGeo = useMemo(() => {

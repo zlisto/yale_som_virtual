@@ -43,10 +43,13 @@ function drawStatic(g) {
   // drums
   g.strokeStyle = '#ff4fa3'
   for (const d of DRUMS) {
-    path(arc(d.c, d.rx, d.rz, d.phi + d.gap, d.phi + Math.PI * 2 - d.gap, 40), false)
+    path(arc(d.c, d.rx, d.rz, 0, Math.PI * 2, 48))
     g.fillStyle = '#16244f'
     g.fill()
-    g.stroke()
+    for (const [a0, a1] of d.arcs) {
+      path(arc(d.c, d.rx, d.rz, a0, a1, 32), false)
+      g.stroke()
+    }
   }
   // library, meeting rooms, stairs
   g.fillStyle = '#3b2a1c'
@@ -63,8 +66,8 @@ function drawStatic(g) {
   }
   g.fillStyle = '#ffd6ea'
   g.font = '9px system-ui, sans-serif'
-  g.fillText('ROSS LIB', ...px(-32.5, 1))
-  g.fillText('BEINECKE', ...px(24, 1))
+  g.fillText('ROSS LIB', ...px(LIBRARY.x0 + 0.6, 1))
+  g.fillText('BEINECKE', ...px(BEIN.c[0] + 2, 1))
   g.fillText('COURTYARD', ...px(-7, 1))
   g.fillText('N ↑', ...px(BOUNDS.xMax + 6, BOUNDS.zMin + 2))
   for (const d of DRUMS) g.fillText(d.id, ...px(d.c[0] - 2.4, d.c[1] + 1))

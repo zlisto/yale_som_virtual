@@ -65,15 +65,16 @@ const ROW_STEP = 1.15
 const AISLE_HALF = 0.8
 const TIER_SPAN = 1.42 // radians each side of the center aisle covered by risers
 const bandStart = (i) => ROW0 - 0.35 + i * ROW_STEP
+const SLIDE_ORDER = ['title', 'chart', 'content']
 export const DRUMS = [
-  { id: '2400', name: 'MBA Class of 1980 Classroom', c: [-31, 28.4], rx: 8, rz: 8, front: [1, -1] },
-  { id: '2410', name: 'Bewkes Classroom', c: [-14.5, 31.4], rx: 6, rz: 6.5, front: [0, -1] },
-  { id: '2420', name: 'Betts Classroom', c: [0, 31.4], rx: 6, rz: 6.5, front: [0, -1] },
-  { id: '2430', name: 'Baker Classroom', c: [14.5, 31.4], rx: 6, rz: 6.5, front: [0, -1] },
-  { id: '2200', name: 'Blumetti Classroom', c: [-31, -28.4], rx: 7.5, rz: 7.5, front: [1, 1] },
-  { id: '2210', name: 'Allison Foundation Classroom', c: [-14.5, -31.4], rx: 6, rz: 6.5, front: [0, 1] },
-  { id: '2220', name: 'Jones Classroom', c: [0, -31.4], rx: 6, rz: 6.5, front: [0, 1] },
-  { id: '2230', name: 'Nooyi Classroom', c: [14.5, -31.4], rx: 6, rz: 6.5, front: [0, 1] },
+  { id: '2400', course: 'ai', name: 'MBA Class of 1980 Classroom', c: [-31, 28.4], rx: 8, rz: 8, front: [1, -1] },
+  { id: '2410', course: 'econ', name: 'Bewkes Classroom', c: [-14.5, 31.4], rx: 6, rz: 6.5, front: [0, -1] },
+  { id: '2420', course: 'stats', name: 'Betts Classroom', c: [0, 31.4], rx: 6, rz: 6.5, front: [0, -1] },
+  { id: '2430', course: 'games', name: 'Baker Classroom', c: [14.5, 31.4], rx: 6, rz: 6.5, front: [0, -1] },
+  { id: '2200', course: 'acct', name: 'Blumetti Classroom', c: [-31, -28.4], rx: 7.5, rz: 7.5, front: [1, 1] },
+  { id: '2210', course: 'ai', name: 'Allison Foundation Classroom', c: [-14.5, -31.4], rx: 6, rz: 6.5, front: [0, 1] },
+  { id: '2220', course: 'games', name: 'Jones Classroom', c: [0, -31.4], rx: 6, rz: 6.5, front: [0, 1] },
+  { id: '2230', course: 'stats', name: 'Nooyi Classroom', c: [14.5, -31.4], rx: 6, rz: 6.5, front: [0, 1] },
 ].map((d) => {
   const dir = norm(d.front)
   const phi = Math.atan2(dir[0], dir[1])
@@ -158,7 +159,9 @@ for (const d of DRUMS) {
   W([fc[0] - t[0] * half, fc[1] - t[1] * half], [fc[0] + t[0] * half, fc[1] + t[1] * half], 'sage', { t: 0.25 })
   const rot = Math.atan2(back[0], back[1]) // screens face the seats
   const offs = half > 6 ? [-2.6, 0, 2.6] : half > 4.2 ? [-2.3, 0, 2.3] : [-1.2, 1.2]
-  for (const o of offs) SCREENS.push({ x: fc[0] + back[0] * 0.15 + t[0] * o, z: fc[1] + back[1] * 0.15 + t[1] * o, rot })
+  offs.forEach((o, k) =>
+    SCREENS.push({ x: fc[0] + back[0] * 0.15 + t[0] * o, z: fc[1] + back[1] * 0.15 + t[1] * o, rot, course: d.course, kind: SLIDE_ORDER[k] }),
+  )
   BOARDS.push({ x: fc[0] + back[0] * 0.15, z: fc[1] + back[1] * 0.15, rot, w: Math.min(2 * half - 1.2, 7) })
   const lp = [fc[0] + back[0] * 0.8 + t[0] * half * 0.35, fc[1] + back[1] * 0.8 + t[1] * half * 0.35]
   LECTERNS.push({ x: lp[0], z: lp[1], rot })
@@ -228,9 +231,12 @@ for (const side of [1, -1]) {
   for (let i = 0; i < n; i++) {
     const cx = M_X0 + (i + 0.5) * w
     const cz = (zf + zb) / 2
-    MEETING.push({ x: cx, z: cz, w, num: side > 0 ? 2461 + i * 2 : 2246 + i * 3 })
-    W([cx - 1.2, cz], [cx + 1.2, cz], 'desk', { h: 0.75, t: 1.1 })
-    for (const dx of [-0.7, 0, 0.7]) for (const dz of [-0.85, 0.85]) CHAIRS.push({ x: cx + dx, z: cz + dz, rot: dz > 0 ? Math.PI : 0 })
+    // glass table runs along x toward a big monitor on the east divider wall
+    const seats = []
+    for (const dx of [-0.8, 0, 0.8]) for (const dz of [-0.95, 0.95]) seats.push({ x: cx + dx, z: cz + dz, rot: dz > 0 ? 0 : Math.PI })
+    seats.push({ x: cx - 1.75, z: cz, rot: -Math.PI / 2 })
+    for (const c of seats) CHAIRS.push(c)
+    MEETING.push({ x: cx, z: cz, w, seats, num: side > 0 ? 2461 + i * 2 : 2246 + i * 3, monitor: { x: cx + w / 2 - 0.1, z: cz, rot: -Math.PI / 2 } })
   }
 }
 

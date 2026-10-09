@@ -7,6 +7,8 @@ import {
   STAIRS, MEETING, BEIN, BEIN_TABLES, PLANTS, LIBRARY, RISE, inPoly, ellPt, tierOutline,
 } from './layout.js'
 import * as T from './textures.js'
+import LabubuParty, { MeetingLabubus } from './LabubuParty.jsx'
+import { COURSE_KEYS, slideTex } from './slides.js'
 import { rng } from './textures.js'
 
 const TAU = Math.PI * 2
@@ -35,6 +37,12 @@ function Instanced({ items, material, geometry }) {
 }
 
 const BOX = new THREE.BoxGeometry(1, 1, 1)
+const slideMats = new Map()
+const slideMat = (course, kind) => {
+  const k = `${course}-${kind}`
+  if (!slideMats.has(k)) slideMats.set(k, new THREE.MeshBasicMaterial({ map: slideTex(course, kind), toneMapped: false }))
+  return slideMats.get(k)
+}
 
 function wallItems(mat) {
   return WALLS.filter((w) => w.mat === mat).map((w) => {
@@ -105,7 +113,7 @@ function useMaterials() {
       shelf: std({ map: T.booksTex(), roughness: 0.8 }),
       leather: std({ color: '#9a4f22', roughness: 0.45 }),
       orange: std({ color: '#d4552a', roughness: 0.8 }),
-      chair: std({ color: '#141416', roughness: 0.6 }),
+      chair: std({ color: '#0a0a0b', roughness: 0.85, envMapIntensity: 0.25 }),
       drum: std({ map: T.drumTex(), roughness: 0.08, metalness: 0.65, envMapIntensity: 1.6 }),
       drumIn: std({ map: T.sageTex(), roughness: 0.9, side: THREE.BackSide }),
       frosted: std({ color: '#e9eef2', transparent: true, opacity: 0.75, roughness: 0.3 }),
@@ -123,6 +131,7 @@ function useMaterials() {
       mural: std({ map: T.muralTex(), roughness: 0.9, side: THREE.DoubleSide }),
       velvet: std({ color: '#0d0b10', roughness: 1 }),
       mullion: std({ color: '#2a2d33', roughness: 0.4, metalness: 0.6 }),
+      tableGlass: std({ color: '#cfe6ee', transparent: true, opacity: 0.45, roughness: 0.05, metalness: 0.3 }),
       screen: new THREE.MeshBasicMaterial({ map: T.screenTex() }),
       poster: new THREE.MeshBasicMaterial({ map: T.posterTex() }),
       board: std({ color: '#fbfbf8', roughness: 0.3 }),
@@ -225,6 +234,7 @@ function Courtyard({ M }) {
         geometry={SPHERE}
       />
       <Instanced items={cafeTables} material={M.board} geometry={BOX} />
+      <LabubuParty />
     </>
   )
 }
@@ -334,7 +344,7 @@ function ClassroomStuff({ M }) {
       <Instanced items={backs} material={M.chair} geometry={BOX} />
       <Instanced items={legs} material={M.mullion} geometry={BOX} />
       {SCREENS.map((s, i) => (
-        <Plane key={i} p={[s.x, 2.95, s.z]} rot={s.rot} w={2.1} h={1.2} material={M.screen} />
+        <Plane key={i} p={[s.x, 2.95, s.z]} rot={s.rot} w={2.1} h={1.18} material={slideMat(s.course, s.kind)} />
       ))}
       {BOARDS.map((b, i) => (
         <mesh key={i} position={[b.x, 1.45, b.z]} rotation={[0, b.rot, 0]} material={M.board}>
@@ -429,6 +439,34 @@ function Stairs({ M }) {
   })
 }
 
+// ---------- meeting rooms: glass table, black chairs (in CHAIRS), giant monitor on the side wall
+function MeetingRooms({ M }) {
+  const tops = useMemo(() => MEETING.map((m) => ({ p: [m.x, 0.74, m.z], s: [2.6, 0.03, 1.2] })), [])
+  const legs = useMemo(
+    () => MEETING.flatMap((m) => [-1, 1].flatMap((sx) => [-1, 1].map((sz) => ({ p: [m.x + sx * 1.15, 0.37, m.z + sz * 0.5], s: [0.05, 0.74, 0.05] })))),
+    [],
+  )
+  const bezels = useMemo(() => MEETING.map((m) => ({ p: [m.monitor.x + 0.03, 1.65, m.monitor.z], r: m.monitor.rot, s: [2.75, 1.6, 0.05] })), [])
+  return (
+    <>
+      <Instanced items={tops} material={M.tableGlass} geometry={BOX} />
+      <Instanced items={legs} material={M.mullion} geometry={BOX} />
+      <Instanced items={bezels} material={M.dark} geometry={BOX} />
+      {MEETING.map((m, i) => (
+        <Plane
+          key={i}
+          p={[m.monitor.x, 1.65, m.monitor.z]}
+          rot={m.monitor.rot}
+          w={2.6}
+          h={1.46}
+          material={slideMat(COURSE_KEYS[i % COURSE_KEYS.length], i % 2 ? 'content' : 'chart')}
+        />
+      ))}
+      <MeetingLabubus />
+    </>
+  )
+}
+
 // ---------- pot lights, plants
 function Details({ M }) {
   const lights = useMemo(() => {
@@ -450,9 +488,7 @@ function Details({ M }) {
       <Instanced items={lights} material={M.lamp} geometry={lampGeo} />
       <Instanced items={PLANTS.map(([x, z]) => ({ p: [x, 0.3, z], s: [0.3, 0.6, 0.3] }))} material={M.pot} geometry={BOX} />
       <Instanced items={PLANTS.map(([x, z]) => ({ p: [x, 1.1, z], s: [0.5, 0.65, 0.5] }))} material={M.leaf} geometry={SPHERE} />
-      {MEETING.map((m, i) => (
-        <Plane key={i} p={[m.x, 1.6, m.z + (m.z > 0 ? 2.85 : -2.85)]} rot={m.z > 0 ? Math.PI : 0} w={1.6} h={0.9} material={M.dark} />
-      ))}
+      <MeetingRooms M={M} />
     </>
   )
 }

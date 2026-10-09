@@ -18,6 +18,7 @@ export default function Player({ lockRef, mapRef, touchRef, onLock, onWhere }) {
   const where = useRef('')
   const eye = useRef(EYE)
   const floorY = useRef(0)
+  const devY = useRef(null) // dev teleport can pin the camera height
   const jumpY = useRef(0)
   const vy = useRef(0)
   const fwd = useMemo(() => new THREE.Vector3(), [])
@@ -57,7 +58,8 @@ export default function Player({ lockRef, mapRef, touchRef, onLock, onWhere }) {
     const dt = Math.min(rawDt, 0.05)
     // dev only: teleport for screenshots by setting <body data-go="[x, z, yawDeg]">
     if (import.meta.env.DEV && document.body.dataset.go) {
-      const [x, z, yaw, pitch = 0] = JSON.parse(document.body.dataset.go)
+      const [x, z, yaw, pitch = 0, y = null] = JSON.parse(document.body.dataset.go)
+      devY.current = y
       delete document.body.dataset.go
       camera.position.set(x, EYE, z)
       camera.rotation.set(pitch, (yaw * Math.PI) / 180, 0, 'YXZ')
@@ -103,7 +105,7 @@ export default function Player({ lockRef, mapRef, touchRef, onLock, onWhere }) {
         mz /= l
       }
       const crouching = active && k.KeyC
-      const speed = crouching ? 1.6 : sprint ? 6.5 : 3.2
+      const speed = crouching ? 2.4 : sprint ? 9.5 : 5.5 // m/s; brisk walk, sprint is a jog
       const pos = { x: camera.position.x + mx * speed * dt, z: camera.position.z + mz * speed * dt }
       collide(pos)
       // risers: walk up one step at a time; anything taller acts like a wall
@@ -129,7 +131,7 @@ export default function Player({ lockRef, mapRef, touchRef, onLock, onWhere }) {
     eye.current += (eyeTarget - eye.current) * Math.min(1, dt * 12)
     const fy = floorAt(camera.position.x, camera.position.z)
     floorY.current += (fy - floorY.current) * Math.min(1, dt * 14) // smooth step up/down
-    camera.position.y = floorY.current + eye.current + jumpY.current
+    camera.position.y = devY.current ?? floorY.current + eye.current + jumpY.current
 
     if (import.meta.env.DEV) document.body.dataset.pos = `${camera.position.x.toFixed(2)},${camera.position.z.toFixed(2)},${fwd.x.toFixed(2)},${fwd.z.toFixed(2)}|${touch.move.map((v) => v.toFixed(2))}`
     mapRef.current?.(camera.position.x, camera.position.z, fwd.x, fwd.z)

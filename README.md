@@ -37,6 +37,9 @@ Open http://localhost:5173 and click **Click to walk in**.
 - `src/Player.jsx`: walking (pointer lock or touch), jump/crouch, circle-vs-wall collision.
 - `src/TouchControls.jsx`: on-screen joystick, drag-to-look, jump and pause buttons.
 - `src/Minimap.jsx`: the black-and-pink map in the corner.
+- `src/Labubu.jsx`: a customizable Labubu built from primitives: `fur`, `expression` (grin / happy / surprised / sleepy / mischief), `shirt` ('yale', 'stripes', or any color), `pants`, `overalls`, `hat`, `sitting`, `anim`.
+- `src/LabubuParty.jsx`: the crew playing in the courtyard plus Labubus in meetings in every glass room.
+- `src/slides.js`: lecture slides (AI Foundations, Econ, Prob & Stats, Game Theory, Accounting) on the classroom screens and meeting-room monitors.
 
 The layout is estimated from the wayfinding plan posted on the floor, so room sizes are approximate. The Stair G painting comes from a photo; the other stairwell paintings are made up.
 

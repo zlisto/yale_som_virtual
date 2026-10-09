@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js'
-import { EYE, SPAWN, collide, locate } from './layout.js'
+import { EYE, MAX_STEP, SPAWN, collide, floorAt, locate } from './layout.js'
 
 const CROUCH_EYE = 1.05
 const JUMP_SPEED = 4.2
@@ -17,6 +17,7 @@ export default function Player({ lockRef, mapRef, touchRef, onLock, onWhere }) {
   const keys = useRef({})
   const where = useRef('')
   const eye = useRef(EYE)
+  const floorY = useRef(0)
   const jumpY = useRef(0)
   const vy = useRef(0)
   const fwd = useMemo(() => new THREE.Vector3(), [])
@@ -60,6 +61,7 @@ export default function Player({ lockRef, mapRef, touchRef, onLock, onWhere }) {
       delete document.body.dataset.go
       camera.position.set(x, EYE, z)
       camera.rotation.set(pitch, (yaw * Math.PI) / 180, 0, 'YXZ')
+      floorY.current = floorAt(x, z)
     }
     const touch = touchRef.current
     const active = controls.isLocked || touch.active
@@ -104,8 +106,16 @@ export default function Player({ lockRef, mapRef, touchRef, onLock, onWhere }) {
       const speed = crouching ? 1.6 : sprint ? 6.5 : 3.2
       const pos = { x: camera.position.x + mx * speed * dt, z: camera.position.z + mz * speed * dt }
       collide(pos)
-      camera.position.x = pos.x
-      camera.position.z = pos.z
+      // risers: walk up one step at a time; anything taller acts like a wall
+      const cur = floorAt(camera.position.x, camera.position.z)
+      if (floorAt(pos.x, pos.z) - cur <= MAX_STEP) {
+        camera.position.x = pos.x
+        camera.position.z = pos.z
+      } else if (floorAt(pos.x, camera.position.z) - cur <= MAX_STEP) {
+        camera.position.x = pos.x // slide along the edge
+      } else if (floorAt(camera.position.x, pos.z) - cur <= MAX_STEP) {
+        camera.position.z = pos.z
+      }
     }
 
     // jump + crouch
@@ -117,7 +127,9 @@ export default function Player({ lockRef, mapRef, touchRef, onLock, onWhere }) {
     if (jumpY.current === 0) vy.current = 0
     const eyeTarget = active && k.KeyC ? CROUCH_EYE : EYE
     eye.current += (eyeTarget - eye.current) * Math.min(1, dt * 12)
-    camera.position.y = eye.current + jumpY.current
+    const fy = floorAt(camera.position.x, camera.position.z)
+    floorY.current += (fy - floorY.current) * Math.min(1, dt * 14) // smooth step up/down
+    camera.position.y = floorY.current + eye.current + jumpY.current
 
     if (import.meta.env.DEV) document.body.dataset.pos = `${camera.position.x.toFixed(2)},${camera.position.z.toFixed(2)},${fwd.x.toFixed(2)},${fwd.z.toFixed(2)}|${touch.move.map((v) => v.toFixed(2))}`
     mapRef.current?.(camera.position.x, camera.position.z, fwd.x, fwd.z)

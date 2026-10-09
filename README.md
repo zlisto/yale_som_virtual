@@ -31,7 +31,7 @@ Open http://localhost:5173 and click **Click to walk in**.
 
 ## How it's built
 
-- `src/layout.js`: the floor plan in meters (+x east, -z north). It holds the drums, library, Beinecke, stairs, meeting rooms, wall colliders, and room lookup. Each classroom faces the courtyard, with the whiteboard and podium on the inner side and rows stepping back toward the outer wall; its two doors are at the front corners.
+- `src/layout.js`: the floor plan in meters (+x east, -z north). It holds the drums, library, Beinecke, stairs, meeting rooms, wall colliders, and room lookup. Each classroom faces the courtyard, with the whiteboard and podium on the inner side and stadium-seating rows (32 cm risers) stepping up toward the outer wall; its two doors are at the front corners. You climb the center-aisle steps one riser at a time.
 - `src/World.jsx`: all the meshes. Walls use instanced boxes and the drums use partial cylinders.
 - `src/textures.js`: procedural canvas textures (carpet, navy drum glass, wood slats, mural, signs, stairwell paintings).
 - `src/Player.jsx`: walking (pointer lock or touch), jump/crouch, circle-vs-wall collision.

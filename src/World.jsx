@@ -4,7 +4,7 @@ import * as THREE from 'three'
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js'
 import {
   H, EAST, BOUNDS, COURTYARD, DRUMS, DRUM_WALL, WALLS, CHAIRS, SCREENS, BOARDS, LECTERNS,
-  STAIRS, MEETING, BEIN, BEIN_TABLES, PLANTS, LIBRARY, inPoly, ellPt,
+  STAIRS, MEETING, BEIN, BEIN_TABLES, PLANTS, LIBRARY, RISE, inPoly, ellPt, tierOutline,
 } from './layout.js'
 import * as T from './textures.js'
 import { rng } from './textures.js'
@@ -111,6 +111,8 @@ function useMaterials() {
       frosted: std({ color: '#e9eef2', transparent: true, opacity: 0.75, roughness: 0.3 }),
       carpet: std({ map: T.carpetTex(), color: '#d9cdb8', roughness: 1 }),
       roomCarpet: std({ map: T.carpetTex([3, 3], '#c3bcae'), roughness: 1 }),
+      tierCarpet: std({ map: T.carpetTex([0.4, 0.4], '#c3bcae'), roughness: 1 }),
+      stepEdge: std({ color: '#d9822b', roughness: 0.7 }),
       beinCarpet: std({ map: T.carpetTex([4, 4]), roughness: 1 }),
       stone: std({ map: T.stoneTex([2, 2]), roughness: 0.95 }),
       ceiling: std({ color: '#f7f5f0', roughness: 1, side: THREE.DoubleSide }),
@@ -259,6 +261,23 @@ function Walls({ M }) {
   return groups.map(([m, items]) => <Instanced key={m} items={items} material={M[m]} geometry={BOX} />)
 }
 
+// ---------- stadium-seating risers: stacked slabs, carpet on top, orange step edges
+function Tiers({ M }) {
+  const geos = useMemo(() => {
+    const out = []
+    for (const d of DRUMS)
+      for (let i = 1; i < d.tiers.n; i++) {
+        const shape = new THREE.Shape(tierOutline(d, i).map(([x, z]) => new THREE.Vector2(x, -z)))
+        const g = new THREE.ExtrudeGeometry(shape, { depth: RISE, bevelEnabled: false })
+        g.rotateX(-Math.PI / 2)
+        g.translate(0, (i - 1) * RISE + 0.005, 0)
+        out.push(g)
+      }
+    return out
+  }, [])
+  return geos.map((g, i) => <mesh key={i} geometry={g} material={[M.tierCarpet, M.stepEdge]} />)
+}
+
 // ---------- classroom drums
 function Drums({ M }) {
   const signs = useMemo(() => DRUMS.map((d) => new THREE.MeshBasicMaterial({ map: T.signTex(d.name, d.id) })), [])
@@ -301,12 +320,12 @@ function Drums({ M }) {
 }
 
 function ClassroomStuff({ M }) {
-  const seats = useMemo(() => CHAIRS.map((c) => ({ p: [c.x, 0.47, c.z], r: c.rot, s: [0.5, 0.08, 0.5] })), [])
+  const seats = useMemo(() => CHAIRS.map((c) => ({ p: [c.x, (c.y || 0) + 0.47, c.z], r: c.rot, s: [0.5, 0.08, 0.5] })), [])
   const backs = useMemo(
-    () => CHAIRS.map((c) => ({ p: [c.x + Math.sin(c.rot) * 0.22, 0.8, c.z + Math.cos(c.rot) * 0.22], r: c.rot, s: [0.5, 0.6, 0.06] })),
+    () => CHAIRS.map((c) => ({ p: [c.x + Math.sin(c.rot) * 0.22, (c.y || 0) + 0.8, c.z + Math.cos(c.rot) * 0.22], r: c.rot, s: [0.5, 0.6, 0.06] })),
     [],
   )
-  const legs = useMemo(() => CHAIRS.map((c) => ({ p: [c.x, 0.22, c.z], s: [0.06, 0.44, 0.06] })), [])
+  const legs = useMemo(() => CHAIRS.map((c) => ({ p: [c.x, (c.y || 0) + 0.22, c.z], s: [0.06, 0.44, 0.06] })), [])
   return (
     <>
       <Instanced items={seats} material={M.chair} geometry={BOX} />
@@ -446,6 +465,7 @@ export default function World() {
       <OutsideTrees M={M} />
       <Walls M={M} />
       <Drums M={M} />
+      <Tiers M={M} />
       <ClassroomStuff M={M} />
       <Beinecke M={M} />
       <Stairs M={M} />

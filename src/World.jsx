@@ -267,7 +267,9 @@ function Tiers({ M }) {
     const out = []
     for (const d of DRUMS)
       for (let i = 1; i < d.tiers.n; i++) {
-        const shape = new THREE.Shape(tierOutline(d, i).map(([x, z]) => new THREE.Vector2(x, -z)))
+        const outline = tierOutline(d, i)
+        if (!outline) continue
+        const shape = new THREE.Shape(outline.map(([x, z]) => new THREE.Vector2(x, -z)))
         const g = new THREE.ExtrudeGeometry(shape, { depth: RISE, bevelEnabled: false })
         g.rotateX(-Math.PI / 2)
         g.translate(0, (i - 1) * RISE + 0.005, 0)

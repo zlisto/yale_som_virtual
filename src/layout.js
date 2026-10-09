@@ -342,9 +342,12 @@ export function tierOutline(d, i, n = 28) {
     const qa = dx * dx + dz * dz
     const qb = 2 * (ox * dx + oz * dz)
     const qc = ox * ox + oz * oz - 1
-    const e = Math.max(a, (-qb + Math.sqrt(qb * qb - 4 * qa * qc)) / (2 * qa))
+    const e = (-qb + Math.sqrt(qb * qb - 4 * qa * qc)) / (2 * qa)
+    // keep only directions where the riser actually exists inside the room; slivers past the
+    // drum wall would extrude into zero-width side walls out in the hallway
+    if (e - a < 0.05) continue
     inner.push([F[0] + u[0] * a, F[1] + u[1] * a])
     outer.push([F[0] + u[0] * e, F[1] + u[1] * e])
   }
-  return [...inner, ...outer.reverse()]
+  return inner.length < 2 ? null : [...inner, ...outer.reverse()]
 }

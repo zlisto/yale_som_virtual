@@ -4,3 +4,7 @@ dist/
 .env.*
 # raw walk-through photos (people in shot) stay local
 reference/
+
+# course export has faculty names/emails; keep it local
+courseslist-*.csv
+*.csv

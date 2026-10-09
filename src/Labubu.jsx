@@ -16,7 +16,7 @@ import * as THREE from 'three'
 //   height      meters (default 1)
 //   phase       animation offset so a crowd doesn't move in sync
 
-const SKIN = '#f3c9a5'
+export const SKIN = '#f3c9a5'
 export const YALE_BLUE = '#00356b'
 export const EXPRESSIONS = ['grin', 'happy', 'surprised', 'sleepy', 'mischief']
 
@@ -37,7 +37,7 @@ function canvasTex(w, h, draw) {
 }
 
 // grayscale fur noise, tinted by material color
-const furTex = () =>
+export const furTex = () =>
   once('fur', () => {
     const t = canvasTex(256, 256, (g) => {
       g.fillStyle = '#d8d8d8'
@@ -140,7 +140,7 @@ function teethGrin(g, cx, y, w, open = 26, tilt = 0) {
   }
 }
 
-const faceTex = (expression) =>
+export const faceTex = (expression) =>
   once(`face-${expression}`, () =>
     canvasTex(512, 440, (g) => {
       g.fillStyle = SKIN
@@ -209,7 +209,7 @@ const faceTex = (expression) =>
     }),
   )
 
-const shirtTex = (kind) =>
+export const shirtTex = (kind) =>
   once(`shirt-${kind}`, () =>
     canvasTex(512, 256, (g) => {
       if (kind === 'stripes') {
@@ -219,7 +219,7 @@ const shirtTex = (kind) =>
         }
         return
       }
-      g.fillStyle = '#ffffff'
+      g.fillStyle = kind === 'yale' ? YALE_BLUE : '#ffffff'
       g.fillRect(0, 0, 512, 256)
       if (kind === 'yale') {
         g.fillStyle = '#ffffff'
@@ -237,13 +237,13 @@ const plainMat = (c, rough = 0.8) => mat(`plain-${c}-${rough}`, () => new THREE.
 const skinMat = () => plainMat(SKIN, 0.55)
 const faceMat = (e) => mat(`face-${e}`, () => new THREE.MeshStandardMaterial({ map: faceTex(e), roughness: 0.5 }))
 function shirtMat(shirt) {
-  if (shirt === 'yale') return mat('shirt-yale', () => new THREE.MeshStandardMaterial({ color: YALE_BLUE, map: shirtTex('yale'), roughness: 0.85 }))
+  if (shirt === 'yale') return mat('shirt-yale', () => new THREE.MeshStandardMaterial({ map: shirtTex('yale'), roughness: 0.85 }))
   if (shirt === 'stripes') return mat('shirt-stripes', () => new THREE.MeshStandardMaterial({ map: shirtTex('stripes'), roughness: 0.85 }))
   return plainMat(shirt, 0.85)
 }
 
 // ---------- shared geometry
-const G = {
+export const G = {
   sphere: new THREE.SphereGeometry(1, 28, 20),
   face: new THREE.SphereGeometry(1, 32, 20, Math.PI / 2 - 0.78, 1.56, Math.PI / 2 - 0.62, 1.32),
   cyl: new THREE.CylinderGeometry(1, 1, 1, 24),

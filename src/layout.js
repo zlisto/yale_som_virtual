@@ -67,14 +67,14 @@ const TIER_SPAN = 1.42 // radians each side of the center aisle covered by riser
 const bandStart = (i) => ROW0 - 0.35 + i * ROW_STEP
 const SLIDE_ORDER = ['title', 'chart', 'content']
 export const DRUMS = [
-  { id: '2400', course: 'ai', name: 'MBA Class of 1980 Classroom', c: [-31, 28.4], rx: 8, rz: 8, front: [1, -1] },
-  { id: '2410', course: 'econ', name: 'Bewkes Classroom', c: [-14.5, 31.4], rx: 6, rz: 6.5, front: [0, -1] },
-  { id: '2420', course: 'stats', name: 'Betts Classroom', c: [0, 31.4], rx: 6, rz: 6.5, front: [0, -1] },
-  { id: '2430', course: 'games', name: 'Baker Classroom', c: [14.5, 31.4], rx: 6, rz: 6.5, front: [0, -1] },
-  { id: '2200', course: 'acct', name: 'Blumetti Classroom', c: [-31, -28.4], rx: 7.5, rz: 7.5, front: [1, 1] },
-  { id: '2210', course: 'ai', name: 'Allison Foundation Classroom', c: [-14.5, -31.4], rx: 6, rz: 6.5, front: [0, 1] },
-  { id: '2220', course: 'games', name: 'Jones Classroom', c: [0, -31.4], rx: 6, rz: 6.5, front: [0, 1] },
-  { id: '2230', course: 'stats', name: 'Nooyi Classroom', c: [14.5, -31.4], rx: 6, rz: 6.5, front: [0, 1] },
+  { id: '2400', course: 'mgt409', name: 'MBA Class of 1980 Classroom', c: [-31, 28.4], rx: 8, rz: 8, front: [1, -1] },
+  { id: '2410', course: 'mgt404', name: 'Bewkes Classroom', c: [-14.5, 31.4], rx: 6, rz: 6.5, front: [0, -1] },
+  { id: '2420', course: 'mgt403', name: 'Betts Classroom', c: [0, 31.4], rx: 6, rz: 6.5, front: [0, -1] },
+  { id: '2430', course: 'mgt887', name: 'Baker Classroom', c: [14.5, 31.4], rx: 6, rz: 6.5, front: [0, -1] },
+  { id: '2200', course: 'mgt402', name: 'Blumetti Classroom', c: [-31, -28.4], rx: 7.5, rz: 7.5, front: [1, 1] },
+  { id: '2210', course: 'mgt538', name: 'Allison Foundation Classroom', c: [-14.5, -31.4], rx: 6, rz: 6.5, front: [0, 1] },
+  { id: '2220', course: 'mgt800', name: 'Jones Classroom', c: [0, -31.4], rx: 6, rz: 6.5, front: [0, 1] },
+  { id: '2230', course: 'mgt541', name: 'Nooyi Classroom', c: [14.5, -31.4], rx: 6, rz: 6.5, front: [0, 1] },
 ].map((d) => {
   const dir = norm(d.front)
   const phi = Math.atan2(dir[0], dir[1])
@@ -158,6 +158,7 @@ for (const d of DRUMS) {
   const half = rT * Math.sqrt(1 - FRONT_DEPTH ** 2) - 0.05
   W([fc[0] - t[0] * half, fc[1] - t[1] * half], [fc[0] + t[0] * half, fc[1] + t[1] * half], 'sage', { t: 0.25 })
   const rot = Math.atan2(back[0], back[1]) // screens face the seats
+  d.front = { fc, back, t, half, rot }
   const offs = half > 6 ? [-2.6, 0, 2.6] : half > 4.2 ? [-2.3, 0, 2.3] : [-1.2, 1.2]
   offs.forEach((o, k) =>
     SCREENS.push({ x: fc[0] + back[0] * 0.15 + t[0] * o, z: fc[1] + back[1] * 0.15 + t[1] * o, rot, course: d.course, kind: SLIDE_ORDER[k] }),
@@ -184,7 +185,7 @@ for (const d of DRUMS) {
       const tg = [-Math.sin(th) * back[0] + Math.cos(th) * t[0], -Math.sin(th) * back[1] + Math.cos(th) * t[1]]
       W([p[0] - tg[0] * 0.6, p[1] - tg[1] * 0.6], [p[0] + tg[0] * 0.6, p[1] + tg[1] * 0.6], 'desk', { h: 0.95, t: 0.5, y0: y })
       for (const s of [-0.3, 0.3]) {
-        CHAIRS.push({ x: p[0] + ux[0] * 0.65 + tg[0] * s, z: p[1] + ux[1] * 0.65 + tg[1] * s, y, rot: Math.atan2(ux[0], ux[1]) })
+        CHAIRS.push({ x: p[0] + ux[0] * 0.65 + tg[0] * s, z: p[1] + ux[1] * 0.65 + tg[1] * s, y, rot: Math.atan2(ux[0], ux[1]), room: d.id })
       }
     }
   }

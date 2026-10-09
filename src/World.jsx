@@ -8,6 +8,9 @@ import {
 } from './layout.js'
 import * as T from './textures.js'
 import LabubuParty, { MeetingLabubus } from './LabubuParty.jsx'
+import LabubuCrowd from './LabubuCrowd.jsx'
+import Faculty from './Faculty.jsx'
+import HandsomeDan from './HandsomeDan.jsx'
 import { COURSE_KEYS, slideTex } from './slides.js'
 import { rng } from './textures.js'
 
@@ -550,6 +553,9 @@ export default function World() {
       <Beinecke M={M} />
       <Stairs M={M} />
       <Details M={M} />
+      <LabubuCrowd />
+      <Faculty />
+      <HandsomeDan />
     </>
   )
 }

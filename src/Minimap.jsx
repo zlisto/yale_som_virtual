@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { BEIN, BOUNDS, COURTYARD, DRUMS, LIBRARY, MEETING, STAIRS, arc } from './layout.js'
+import { DAN } from './HandsomeDan.jsx'
 
 const PAD = 3
 const X0 = BOUNDS.xMin - PAD
@@ -83,6 +84,15 @@ export default function Minimap({ drawRef }) {
     const g = ref.current.getContext('2d')
     drawRef.current = (x, z, fx, fz) => {
       g.drawImage(bg, 0, 0)
+      // Handsome Dan
+      const [dx, dy] = px(DAN.x, DAN.z)
+      g.fillStyle = '#4a90ff'
+      g.strokeStyle = '#ffffff'
+      g.lineWidth = 1.5
+      g.beginPath()
+      g.arc(dx, dy, 4, 0, Math.PI * 2)
+      g.fill()
+      g.stroke()
       const [cx, cy] = px(x, z)
       g.fillStyle = 'rgba(255,79,163,0.25)'
       g.beginPath()

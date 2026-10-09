@@ -1,13 +1,16 @@
 import * as THREE from 'three'
 
-// Fake lecture slides drawn on canvas, one deck per course.
+// Lecture slides drawn on canvas, one deck per course (Yale SOM Fall 2026 MBA courses).
 // kind: 'title' | 'chart' | 'content'
 export const COURSES = {
-  ai: { name: 'AI Foundations for Managers', code: 'MGT 409' },
-  econ: { name: 'Economics', code: 'Econ' },
-  stats: { name: 'Probability & Statistics', code: 'Prob & Stats' },
-  games: { name: 'Game Theory', code: 'Game Theory' },
-  acct: { name: 'Accounting', code: 'Accounting' },
+  mgt409: { code: 'MGT 409', name: 'AI Foundations for Managers', prof: 'Albus Dumbledore' },
+  mgt404: { code: 'MGT 404', name: 'Basics of Economics', prof: 'Minerva McGonagall' },
+  mgt403: { code: 'MGT 403', name: 'Probability Modeling & Statistics', prof: 'Sybill Trelawney' },
+  mgt887: { code: 'MGT 887', name: 'Negotiations', prof: 'Horace Slughorn' },
+  mgt402: { code: 'MGT 402', name: 'Basics of Accounting', prof: 'Severus Snape' },
+  mgt538: { code: 'MGT 538', name: 'Mastering Influence & Persuasion', prof: 'Gilderoy Lockhart' },
+  mgt800: { code: 'MGT 800', name: 'Crisis Management in Tech', prof: 'Alastor Moody' },
+  mgt541: { code: 'MGT 541', name: 'Corporate Finance', prof: 'Filius Flitwick' },
 }
 export const COURSE_KEYS = Object.keys(COURSES)
 export const SLIDE_KINDS = ['title', 'chart', 'content']
@@ -19,30 +22,45 @@ const W = 1280
 const Hh = 720
 
 const DECKS = {
-  ai: {
-    title: ['Vibe Coding with Agents', 'Lecture 13 · Walk the floor'],
+  mgt409: {
+    title: ['Vibe Coding with Agents', 'Say it in plain words. Let the agent build.'],
     content: ['How a vibe coder ships', ['Say what you want in plain words', 'Let the agent plan, then build', 'Run it, look at it, fix it', 'Pick the cheapest model that works']],
     chart: 'models',
   },
-  econ: {
+  mgt404: {
     title: ['Supply & Demand', 'Where the curves meet'],
     content: ['Price elasticity of demand', ['ε = (%ΔQ) / (%ΔP)', '|ε| > 1 → elastic: raise price, lose revenue', '|ε| < 1 → inelastic: raise price, gain revenue', 'Substitutes make demand more elastic']],
     chart: 'supplydemand',
   },
-  stats: {
-    title: ['The Normal Distribution', 'and why everything is bell-shaped'],
-    content: ["Bayes' Rule", ['P(A | B) = P(B | A) · P(A) / P(B)', 'Prior → evidence → posterior', 'Base rates matter more than you think', 'Test is 99% accurate ≠ 99% you have it']],
+  mgt403: {
+    title: ['The Normal Distribution', 'Predicting the future, responsibly'],
+    content: ["Bayes' Rule", ['P(A | B) = P(B | A) · P(A) / P(B)', 'Prior → evidence → posterior', 'Base rates matter more than you think', 'A crystal ball is not a confidence interval']],
     chart: 'normal',
   },
-  games: {
-    title: ["The Prisoner's Dilemma", 'Nash equilibrium in one picture'],
-    content: ['Finding a Nash equilibrium', ['List each player’s best response', 'Equilibrium: nobody wants to deviate', 'Defect / Defect is stable — and worse for both', 'Repeated games make cooperation possible']],
+  mgt887: {
+    title: ['Negotiation as a Game', 'BATNA, ZOPA, and the Prisoner’s Dilemma'],
+    content: ['Before you sit down', ['Know your BATNA — and estimate theirs', 'Find the ZOPA: where both say yes', 'Trade on differences in what you value', 'Repeated games reward cooperation']],
     chart: 'payoff',
   },
-  acct: {
+  mgt402: {
     title: ['The Balance Sheet', 'Assets = Liabilities + Equity'],
-    content: ['Reading an income statement', ['Revenue − COGS = Gross profit', 'Gross profit − OpEx = Operating income', 'Accrual ≠ cash: watch working capital', 'Every debit has a credit']],
+    content: ['Reading an income statement', ['Revenue − COGS = Gross profit', 'Gross profit − OpEx = Operating income', 'Accrual ≠ cash: watch working capital', 'Every debit has a credit. Turn to page 394.']],
     chart: 'balance',
+  },
+  mgt538: {
+    title: ['The Science of Yes', 'Influence without magic'],
+    content: ["Cialdini's six principles", ['Reciprocity · Commitment · Social proof', 'Liking · Authority · Scarcity', 'Ethical influence builds trust', 'Signed photos are not a strategy']],
+    chart: 'funnel',
+  },
+  mgt800: {
+    title: ['Constant Vigilance', 'Running the first 72 hours of a tech crisis'],
+    content: ['The incident playbook', ['Detect: alerts, not tweets', 'Contain first, explain second', 'One voice, one channel, regular updates', 'Blameless post-mortem within a week']],
+    chart: 'timeline',
+  },
+  mgt541: {
+    title: ['Valuation by DCF', 'A dollar today beats a dollar tomorrow'],
+    content: ['NPV and the cost of capital', ['NPV = Σ CFₜ / (1 + r)ᵗ − I₀', 'Take projects with NPV > 0', 'r = WACC, set by risk, not by hope', 'Terminal value often dominates — check it']],
+    chart: 'dcf',
   },
 }
 
@@ -150,6 +168,49 @@ function drawChart(g, which) {
       }
     g.font = '28px Georgia, serif'
     g.fillText('Nash eq.', x0 + c + 75, y0 + 2 * c + 20)
+  } else if (which === 'funnel') {
+    const steps = [['Attention', 900], ['Interest', 700], ['Trust', 500], ['Yes', 300]]
+    steps.forEach(([label, w], i) => {
+      g.fillStyle = [BLUE, '#3d5f93', '#8aa4c8', PINK][i]
+      g.fillRect(640 - w / 2, 170 + i * 105, w, 88)
+      g.fillStyle = i === 2 ? INK : '#ffffff'
+      g.font = 'bold 36px Georgia, serif'
+      g.fillText(label, 640 - g.measureText(label).width / 2, 226 + i * 105)
+    })
+  } else if (which === 'timeline') {
+    g.strokeStyle = BLUE
+    g.lineWidth = 8
+    g.beginPath()
+    g.moveTo(120, 400)
+    g.lineTo(1160, 400)
+    g.stroke()
+    const marks = [['0h', 'Detect'], ['1h', 'Contain'], ['4h', 'Update'], ['24h', 'Fix'], ['72h', 'Post-mortem']]
+    marks.forEach(([tm, lab], i) => {
+      const x = 160 + i * 240
+      g.fillStyle = i === 1 ? PINK : BLUE
+      g.beginPath()
+      g.arc(x, 400, 22, 0, Math.PI * 2)
+      g.fill()
+      g.fillStyle = INK
+      g.font = 'bold 34px Georgia, serif'
+      g.fillText(tm, x - 24, 340)
+      g.font = '30px Georgia, serif'
+      g.fillText(lab, x - g.measureText(lab).width / 2, 470)
+    })
+  } else if (which === 'dcf') {
+    axes()
+    for (let i = 0; i < 6; i++) {
+      const raw = 300
+      const pv = raw / Math.pow(1.18, i)
+      const x = ox + 50 + i * 155
+      g.fillStyle = '#d5dde9'
+      g.fillRect(x, oy - raw, 110, raw)
+      g.fillStyle = i === 0 ? PINK : BLUE
+      g.fillRect(x, oy - pv, 110, pv)
+      g.fillStyle = INK
+      g.fillText(`t=${i}`, x + 25, oy + 40)
+    }
+    g.fillText('cash flow vs. present value (r = 18%)', ox + 20, 200)
   } else {
     axes()
     g.fillStyle = BLUE
@@ -177,18 +238,21 @@ export function slideTex(course, kind) {
   const g = c.getContext('2d')
   const deck = DECKS[course]
   if (kind === 'title') {
+    const info = COURSES[course]
     g.fillStyle = BLUE
     g.fillRect(0, 0, W, Hh)
     g.fillStyle = PINK
-    g.fillRect(80, 300, 140, 10)
+    g.font = 'bold 34px Georgia, serif'
+    g.fillText(`${info.code} · ${info.name}`, 80, 150)
+    g.fillRect(80, 330, 140, 10)
     g.fillStyle = '#ffffff'
     g.font = 'bold 76px Georgia, serif'
-    g.fillText(deck.title[0], 80, 270)
-    g.font = '40px Georgia, serif'
-    g.fillText(deck.title[1], 80, 380)
-    g.font = '30px Georgia, serif'
+    g.fillText(deck.title[0], 80, 290)
+    g.font = '38px Georgia, serif'
+    g.fillText(deck.title[1], 80, 410)
+    g.font = 'italic 34px Georgia, serif'
     g.fillStyle = '#c9d6ea'
-    g.fillText(`${COURSES[course].name} · Yale SOM`, 80, 620)
+    g.fillText(`Prof. ${info.prof} · Yale SOM · Fall 2026`, 80, 620)
   } else if (kind === 'content') {
     frame(g, course, deck.content[0])
     g.fillStyle = INK

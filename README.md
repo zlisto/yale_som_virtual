@@ -39,7 +39,10 @@ Open http://localhost:5173 and click **Click to walk in**.
 - `src/Minimap.jsx`: the black-and-pink map in the corner.
 - `src/Labubu.jsx`: a customizable Labubu built from primitives: `fur`, `expression` (grin / happy / surprised / sleepy / mischief), `shirt` ('yale', 'stripes', or any color), `pants`, `overalls`, `hat`, `sitting`, `anim`.
 - `src/LabubuParty.jsx`: the crew playing in the courtyard plus Labubus in meetings in every glass room.
-- `src/slides.js`: lecture slides (AI Foundations, Econ, Prob & Stats, Game Theory, Accounting) on the classroom screens and meeting-room monitors.
+- `src/slides.js`: lecture slides for eight Fall 2026 MBA courses (MGT 409, 404, 403, 887, 402, 538, 800, 541) on the classroom screens and meeting-room monitors.
+- `src/LabubuCrowd.jsx`: 30 seated Labubu students per classroom, drawn with shared instanced meshes.
+- `src/Professor.jsx` + `src/Faculty.jsx`: cartoon Hogwarts professors teaching each class (Dumbledore, McGonagall, Trelawney, Slughorn, Snape, Lockhart, Moody, Flitwick), plus Hagrid in the courtyard.
+- `src/HandsomeDan.jsx`: Handsome Dan touring a loop of 1000 randomly chosen classrooms (blue dot on the map).
 
 The layout is estimated from the wayfinding plan posted on the floor, so room sizes are approximate. The Stair G painting comes from a photo; the other stairwell paintings are made up.
 

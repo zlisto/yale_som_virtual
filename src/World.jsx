@@ -1,10 +1,10 @@
 import { useLayoutEffect, useMemo, useRef } from 'react'
-import { useThree } from '@react-three/fiber'
+import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js'
 import {
   H, EAST, BOUNDS, COURTYARD, DRUMS, DRUM_WALL, WALLS, CHAIRS, SCREENS, BOARDS, LECTERNS,
-  STAIRS, MEETING, BEIN, BEIN_TABLES, PLANTS, LIBRARY, RISE, inPoly, ellPt, tierOutline,
+  STAIRS, MEETING, MEET_DOOR, BEIN, BEIN_TABLES, PLANTS, LIBRARY, RISE, inPoly, ellPt, tierOutline,
 } from './layout.js'
 import * as T from './textures.js'
 import LabubuParty, { MeetingLabubus } from './LabubuParty.jsx'
@@ -131,6 +131,7 @@ function useMaterials() {
       mural: std({ map: T.muralTex(), roughness: 0.9, side: THREE.DoubleSide }),
       velvet: std({ color: '#0d0b10', roughness: 1 }),
       mullion: std({ color: '#2a2d33', roughness: 0.4, metalness: 0.6 }),
+      steel: std({ color: '#c9ced6', metalness: 0.9, roughness: 0.25 }),
       tableGlass: std({ color: '#cfe6ee', transparent: true, opacity: 0.45, roughness: 0.05, metalness: 0.3 }),
       screen: new THREE.MeshBasicMaterial({ map: T.screenTex() }),
       poster: new THREE.MeshBasicMaterial({ map: T.posterTex() }),
@@ -439,6 +440,44 @@ function Stairs({ M }) {
   })
 }
 
+// glass door on a hinge with a long metal bar handle; swings open when you walk up to it
+function GlassDoor({ door, M }) {
+  const ref = useRef()
+  const { camera } = useThree()
+  const [hx, hz] = door.hinge
+  const mid = [hx + MEET_DOOR / 2, hz]
+  useFrame((_, dt) => {
+    const near = Math.hypot(camera.position.x - mid[0], camera.position.z - mid[1]) < 2.4
+    const target = near ? door.swing * 1.45 : 0
+    ref.current.rotation.y += (target - ref.current.rotation.y) * Math.min(1, dt * 6)
+  })
+  const handleX = MEET_DOOR - 0.12
+  return (
+    <group ref={ref} position={[hx, 0, hz]}>
+      <mesh material={M.meetGlass} position={[MEET_DOOR / 2, 1.17, 0]}>
+        <boxGeometry args={[MEET_DOOR - 0.02, 2.3, 0.03]} />
+      </mesh>
+      {[0.03, 2.31].map((y) => (
+        <mesh key={y} material={M.steel} position={[MEET_DOOR / 2, y, 0]}>
+          <boxGeometry args={[MEET_DOOR, 0.05, 0.045]} />
+        </mesh>
+      ))}
+      {[-0.07, 0.07].map((zo) => (
+        <group key={zo}>
+          <mesh material={M.steel} position={[handleX, 1.05, zo]}>
+            <cylinderGeometry args={[0.016, 0.016, 0.95, 12]} />
+          </mesh>
+          {[0.65, 1.45].map((y) => (
+            <mesh key={y} material={M.steel} position={[handleX, y, zo / 2]} rotation={[Math.PI / 2, 0, 0]}>
+              <cylinderGeometry args={[0.01, 0.01, Math.abs(zo), 8]} />
+            </mesh>
+          ))}
+        </group>
+      ))}
+    </group>
+  )
+}
+
 // ---------- meeting rooms: glass table, black chairs (in CHAIRS), giant monitor on the side wall
 function MeetingRooms({ M }) {
   const tops = useMemo(() => MEETING.map((m) => ({ p: [m.x, 0.74, m.z], s: [2.6, 0.03, 1.2] })), [])
@@ -461,6 +500,9 @@ function MeetingRooms({ M }) {
           h={1.46}
           material={slideMat(COURSE_KEYS[i % COURSE_KEYS.length], i % 2 ? 'content' : 'chart')}
         />
+      ))}
+      {MEETING.map((m, i) => (
+        <GlassDoor key={i} door={m.door} M={M} />
       ))}
       <MeetingLabubus />
     </>

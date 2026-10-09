@@ -221,10 +221,10 @@ for (const s of STAIRS) {
 export const MEETING = []
 const M_X0 = -35
 const M_X1 = 22.6
+export const MEET_DOOR = 1.1 // glass door width
 for (const side of [1, -1]) {
   const zf = 42.3 * side
   const zb = zMax * side
-  W([M_X0, zf], [M_X1, zf], 'meetGlass', { t: 0.08 })
   const n = 9
   const w = (M_X1 - M_X0) / n
   for (let i = 0; i <= n; i++) W([M_X0 + i * w, zf], [M_X0 + i * w, zb], 'white', { t: 0.15 })
@@ -236,7 +236,22 @@ for (const side of [1, -1]) {
     for (const dx of [-0.8, 0, 0.8]) for (const dz of [-0.95, 0.95]) seats.push({ x: cx + dx, z: cz + dz, rot: dz > 0 ? 0 : Math.PI })
     seats.push({ x: cx - 1.75, z: cz, rot: -Math.PI / 2 })
     for (const c of seats) CHAIRS.push(c)
-    MEETING.push({ x: cx, z: cz, w, seats, num: side > 0 ? 2461 + i * 2 : 2246 + i * 3, monitor: { x: cx + w / 2 - 0.1, z: cz, rot: -Math.PI / 2 } })
+    W([cx - 1.3, cz], [cx + 1.3, cz], 'none', { t: 1.2 }) // glass table
+    // glass front with a glass door near the west end (door swings into the room)
+    const d0 = cx - w / 2 + 0.3
+    const d1 = d0 + MEET_DOOR
+    W([cx - w / 2, zf], [d0, zf], 'meetGlass', { t: 0.08 })
+    W([d1, zf], [cx + w / 2, zf], 'meetGlass', { t: 0.08 })
+    W([d0, zf], [d1, zf], 'meetGlass', { t: 0.08, y0: 2.35, h: H - 2.35, collide: false }) // glass above the door
+    MEETING.push({
+      x: cx,
+      z: cz,
+      w,
+      seats,
+      num: side > 0 ? 2461 + i * 2 : 2246 + i * 3,
+      monitor: { x: cx + w / 2 - 0.1, z: cz, rot: -Math.PI / 2 },
+      door: { hinge: [d0, zf], swing: side > 0 ? -1 : 1 },
+    })
   }
 }
 
@@ -309,6 +324,7 @@ export function locate(x, z) {
   }
   if (x < LIBRARY.x1 && z > LIBRARY.z0 && z < LIBRARY.z1) return 'Ross Library · 2100'
   if (x > EAST) return Math.hypot(x - EAST, z) < BEIN.r ? 'Beinecke Terrace Room · 2300' : 'Beinecke Terrace (outside)'
+  for (const m of MEETING) if (Math.abs(x - m.x) < m.w / 2 && Math.abs(z - m.z) < 3) return `Meeting room · ${m.num}`
   if (z > 38) return 'South back hallway · meeting rooms 2461+'
   if (z < -38) return 'North back hallway · meeting rooms 2246+'
   if (x < -20) return 'West cloister · Ross Library side'

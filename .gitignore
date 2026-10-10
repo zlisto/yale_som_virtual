@@ -8,3 +8,10 @@ reference/
 # course export has faculty names/emails; keep it local
 courseslist-*.csv
 *.csv
+
+# original course exports (with faculty emails) stay local; data/ has email-free copies
+data/private/
+
+# python
+.venv/
+__pycache__/

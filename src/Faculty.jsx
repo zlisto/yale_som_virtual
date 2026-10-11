@@ -42,7 +42,8 @@ export default function Faculty() {
         const lec = LECTERNS[i]
         return {
           who,
-          pos: [fc[0] + back[0] * 1.15 - t[0] * half * 0.3, 0, fc[1] + back[1] * 1.15 - t[1] * half * 0.3],
+          // 0.85 m in front of the board: at 1.15 m the end of the front desk row cut into the robe
+          pos: [fc[0] + back[0] * 0.85 - t[0] * half * 0.3, 0, fc[1] + back[1] * 0.85 - t[1] * half * 0.3],
           rot,
           plaque: { p: [lec.x + back[0] * 0.26, 0.85, lec.z + back[1] * 0.26], rot, mat: new THREE.MeshBasicMaterial({ map: plaqueTex(PROFESSORS[who].name) }) },
         }

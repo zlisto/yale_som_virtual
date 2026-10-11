@@ -1,0 +1,110 @@
+// What each classroom professor says in the speech bubble (life/ProfBubble.jsx), keyed by the professor in
+// Faculty.jsx ROOM_PROFESSOR. The lines follow the course on that room's whiteboard (textures.js BOARD_NOTES)
+// and, for 2400, the MGT 409 material in the eggs. Each line is under 60 characters and quotes no book or film.
+export const LECTURES = {
+  // 2400, MGT 409 AI Foundations for Managers
+  dumbledore: [
+    'Say what you want in plain words. Let the agent plan.',
+    'Then read the diff before you merge. Every time.',
+    'Small steps beat one giant prompt.',
+    'Tokens cost money. Watch what your agent spends.',
+    'A poster can give your agent orders: prompt injection.',
+    'Froggy obeyed a bakery poster. Do not be Froggy.',
+    'Lisa answers course questions at any hour. Ask her.',
+    'Every homework hides a dump trap. Read before you paste.',
+    'When the agent is wrong, it is wrong with confidence.',
+    'Final project: ship a tool someone actually uses.',
+    'Live demo next: a working scraper in ten minutes.',
+  ],
+  // 2410, MGT 404 Basics of Economics
+  mcgonagall: [
+    'As the price rises, quantity demanded falls.',
+    'A shift moves the curve. A movement slides along it.',
+    'Equilibrium: quantity demanded equals supplied.',
+    'Cap the price below P star and you get a shortage.',
+    'Rent control in New York: who gets the apartments?',
+    'Elasticity: percent change in Q over percent in P.',
+    'A tax splits between buyers and sellers.',
+    'The less elastic side bears more of the tax.',
+    'Draw the graph first. Then write the answer.',
+    'Problem set due Friday at nine. No extensions.',
+  ],
+  // 2420, MGT 403 Probability Modeling & Statistics
+  trelawney: [
+    'The normal curve: mean in the middle, sigma for spread.',
+    'Subtract the mean, divide by sigma. That is z.',
+    '68, 95, 99.7. Learn the rule by heart.',
+    'Average enough draws and the mean turns normal.',
+    'Past 1.96, only two and a half percent remain.',
+    'A confidence interval is a range, not a prophecy.',
+    'I foresaw this result. My sample size was one.',
+    'Sample means vary less than single draws.',
+    'Larger n, narrower interval. The crystal ball agrees.',
+    'Check your units before you trust your z.',
+  ],
+  // 2430, MGT 887 Negotiations
+  slughorn: [
+    'Know your BATNA before you sit down.',
+    'Your reservation price is where you walk away.',
+    'The ZOPA is where the two ranges overlap.',
+    'Anchor first and anchor high, but never absurd.',
+    'Trade what you value less for what they value more.',
+    'Role play today: buying a car. Find a partner.',
+    'Ten rounds of the Prisoner\'s Dilemma after the break.',
+    'Silence is a tactic. Let them fill it.',
+    'Never take the first offer, however charming.',
+    'Debrief: what did your partner really want?',
+  ],
+  // 2200, MGT 402 Basics of Accounting
+  snape: [
+    'Assets equal liabilities plus equity. Always.',
+    'Every entry has a debit and an equal credit.',
+    'Borrow 500: debit cash, credit the loan.',
+    'Accrual basis: record revenue when it is earned.',
+    'Your trial balance does not balance. Look again.',
+    'Today\'s case: the Potions Ltd. ledger.',
+    'Debits on the left. I will not repeat myself.',
+    'Cash is not profit. Write that down.',
+    'Quiz on Monday, chapters three and four.',
+    'A sloppy journal entry is a future restatement.',
+  ],
+  // 2210, MGT 538 Mastering Influence & Persuasion
+  lockhart: [
+    'Six levers of influence. I use all six before lunch.',
+    'Reciprocity: give first, and people give back.',
+    'Social proof: people copy what others do.',
+    'Scarcity sells. Limited editions, limited time.',
+    'Authority works best when it is earned.',
+    'Ask small first. The big yes comes easier.',
+    'Commitment: people stay true to what they said.',
+    'Liking matters. Smile. I certainly do.',
+    'Persuade, never deceive. That is the ethics line.',
+    'Read chapter four for next week: social proof.',
+  ],
+  // 2220, MGT 800 Crisis Management in Tech
+  moody: [
+    'First hour: detect, page on-call, triage.',
+    'One owner and one channel. No exceptions.',
+    'Update the status page every thirty minutes.',
+    'Contain first. Find the root cause after.',
+    'Who talks to the press? Decide before 3 am.',
+    'Tabletop today: a full outage at three in the morning.',
+    'Customers forgive outages. Not silence.',
+    'Blameless postmortems: fix the system, not people.',
+    'Postmortem written within one week.',
+    'Assume the next incident has already started.',
+  ],
+  // 2230, MGT 541 Corporate Finance
+  flitwick: [
+    'Value is the present value of future cash flows.',
+    'Discount the firm\'s cash flows at the WACC.',
+    'Terminal value: next year\'s cash flow over r minus g.',
+    'Positive NPV? Accept the project.',
+    'Small changes in g move the value a lot.',
+    'Build free cash flow before the discount rate.',
+    'Take your WACC from comparable firms.',
+    'Today\'s case: valuing Gringotts Bank.',
+    'A dollar today beats a dollar next year.',
+    'Run the sensitivity table on r and g.',
+  ],
+}

@@ -1,4 +1,6 @@
 import { useRef, useState } from 'react'
+import { interact, interactState } from './interact/registry.js'
+import { useStore } from './interact/store.js'
 
 const STICK_R = 50 // px the knob can travel
 
@@ -17,6 +19,7 @@ export default function TouchControls({ touchRef, onPause }) {
   const lookId = useRef(null)
   const lookLast = useRef([0, 0])
   const [knob, setKnob] = useState([0, 0])
+  const canAct = useStore(interactState, (s) => !!s.active)
 
   const stickDown = (e) => {
     e.stopPropagation()
@@ -73,6 +76,16 @@ export default function TouchControls({ touchRef, onPause }) {
         }}
       >
         jump
+      </button>
+      <button
+        className={canAct ? 'action on' : 'action'}
+        aria-label="interact"
+        onPointerDown={(e) => {
+          e.stopPropagation()
+          interact()
+        }}
+      >
+        {canAct ? 'action' : '·'}
       </button>
       <button
         className="pause"

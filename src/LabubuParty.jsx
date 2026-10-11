@@ -1,42 +1,19 @@
-import Labubu, { EXPRESSIONS, TossBall, YALE_BLUE } from './Labubu.jsx'
+import { useRef } from 'react'
+import { useFrame } from '@react-three/fiber'
+import Labubu, { EXPRESSIONS, YALE_BLUE } from './Labubu.jsx'
 import { MEETING } from './layout.js'
+import Life from './life/index.jsx'
+import TerraceParty from './life/TerraceParty.jsx'
 
-// Labubus playing on the courtyard lawn (ground floor, y = -5).
-// Courtyard trees stand at (-10,-9) (0,-11.5) (10,-8.5) (-12,3) (12,4) (-5,11) (7,11.5) (-2,1).
-const RING = { center: [-2, 1], radius: 3, speed: 0.9 }
-const RING_GAP = (Math.PI * 2) / RING.speed / 4 // four friends evenly spaced around the tree
-
-const CREW = [
-  // classic brown, hopping
-  { fur: '#5a3d2e', expression: 'grin', anim: 'hop', position: [-6, 0, -3] },
-  // the dashboard one: cream fur, striped tee, overalls, bucket hat
-  { fur: '#d9c2a0', expression: 'happy', shirt: 'stripes', pants: '#e8dcc0', overalls: true, hat: 'bucket', anim: 'dance', position: [4, 0, -4], rotation: 0.4 },
-  // pink in a Yale tee, waving up at the cloister
-  { fur: '#ff8fc7', expression: 'mischief', shirt: 'yale', pants: '#1d2a44', anim: 'wave', position: [6, 0, 2], rotation: Math.PI },
-  // ring-around-the-tree
-  { fur: '#9fe0c6', expression: 'grin', shirt: 'yale', anim: 'circle', circle: RING, phase: 0 },
-  { fur: '#b9a5e6', expression: 'happy', anim: 'circle', circle: RING, phase: RING_GAP },
-  { fur: '#8d8d93', expression: 'surprised', shirt: 'stripes', pants: '#2c2c30', anim: 'circle', circle: RING, phase: RING_GAP * 2 },
-  { fur: '#f2efe9', expression: 'happy', shirt: YALE_BLUE, pants: '#3d5a8a', anim: 'circle', circle: RING, phase: RING_GAP * 3 },
-  // playing catch
-  { fur: '#f2a65a', expression: 'grin', shirt: '#ffffff', pants: YALE_BLUE, anim: 'catch', position: [7, 0, -1], rotation: Math.PI / 2 },
-  { fur: '#7fb2ff', expression: 'surprised', shirt: 'yale', anim: 'catch', position: [11.5, 0, -1], rotation: -Math.PI / 2, phase: 1.6 },
-  // black Labubu in a pink tee, spinning
-  { fur: '#2b2b2e', expression: 'mischief', shirt: '#ff4fa3', pants: '#111114', anim: 'spin', position: [-9, 0, 6] },
-  // sleepy one with a pink bucket hat
-  { fur: '#c98f6b', expression: 'sleepy', shirt: '#7a9e7e', pants: '#d8cfc0', hat: '#ffb3d9', anim: 'idle', position: [9, 0, 7], rotation: -0.6 },
-  // little one dancing next to the big brown one
-  { fur: '#5a3d2e', expression: 'happy', shirt: 'yale', pants: '#d8cfc0', anim: 'dance', position: [-7.5, 0, -5], height: 0.8, phase: 0.5 },
-]
-
-export default function LabubuParty({ y = -5, height = 1.3 }) {
+// The courtyard lawn belongs to the spell school (src/life/SpellSchool.jsx): four classes, one per quadrant.
+// The hopping, dancing and catch-playing Labubus and the ring around the maple were taken off the lawn in round 3.
+// Life (src/life) mounts here, in world coordinates.
+export default function LabubuParty() {
   return (
-    <group position={[0, y, 0]}>
-      {CREW.map((c, i) => (
-        <Labubu key={i} height={(c.height ?? 1) * height} phase={c.phase ?? i * 0.37} {...c} />
-      ))}
-      <TossBall from={[7, -1]} to={[11.5, -1]} height={height} />
-    </group>
+    <>
+      <Life />
+      <TerraceParty />
+    </>
   )
 }
 
@@ -67,6 +44,22 @@ const MEETERS = MEETING.flatMap((m, i) => {
   }))
 })
 
+// each meeting room's Labubus draw only while the camera is within 16 m: the rooms sit behind the drums in the
+// back hallways, and from the cloister and the courtyard the frustum took in about 20 of them behind walls
+const ROOMS_OF = MEETING.map((m, i) => ({ m, list: MEETERS.filter((c) => c.key.startsWith(`${i}-`)) }))
+function MeetingRoom({ m, list }) {
+  const ref = useRef()
+  useFrame(({ camera }) => {
+    ref.current.visible = Math.hypot(camera.position.x - m.x, camera.position.z - m.z) < 16
+  })
+  return (
+    <group ref={ref}>
+      {list.map(({ key, ...c }) => (
+        <Labubu key={key} sitting {...c} />
+      ))}
+    </group>
+  )
+}
 export function MeetingLabubus() {
-  return MEETERS.map(({ key, ...c }) => <Labubu key={key} sitting {...c} />)
+  return ROOMS_OF.map((r, i) => <MeetingRoom key={i} {...r} />)
 }

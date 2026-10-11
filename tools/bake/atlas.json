@@ -1,0 +1,308 @@
+{
+ "triangles": 71142,
+ "size": 2048,
+ "samples": 256,
+ "ao_samples": 128,
+ "atlases": [
+  {
+   "index": 0,
+   "objects": {
+    "bake_floor__carpet": {
+     "area_m2": 3709.6,
+     "texels_per_m": 19.6
+    },
+    "bake_drumin_2400__drumIn0": {
+     "area_m2": 366.1,
+     "texels_per_m": 12.4
+    },
+    "bake_bein_floor__beinCarpet": {
+     "area_m2": 245.3,
+     "texels_per_m": 13.8
+    },
+    "bake_drumin_2410__drumIn1": {
+     "area_m2": 299.1,
+     "texels_per_m": 12.4
+    },
+    "bake_terrace__stone": {
+     "area_m2": 208.4,
+     "texels_per_m": 13.8
+    },
+    "bake_drumin_2230__drumIn7": {
+     "area_m2": 241.7,
+     "texels_per_m": 12.4
+    },
+    "bake_baseboards__dark": {
+     "area_m2": 324.6,
+     "texels_per_m": 8.7
+    },
+    "bake_room_2210__roomCarpet": {
+     "area_m2": 110.9,
+     "texels_per_m": 12.4
+    },
+    "bake_rail__silver": {
+     "area_m2": 104.7,
+     "texels_per_m": 9.8
+    },
+    "bake_tiers_2230__tierCarpet": {
+     "area_m2": 67.3,
+     "texels_per_m": 9.8
+    },
+    "bake_tiers_2400__stepEdge": {
+     "area_m2": 63.7,
+     "texels_per_m": 9.8
+    },
+    "bake_bein_mural__mural": {
+     "area_m2": 23.3,
+     "texels_per_m": 13.8
+    },
+    "bake_tiers_2220__stepEdge": {
+     "area_m2": 9.9,
+     "texels_per_m": 9.8
+    }
+   }
+  },
+  {
+   "index": 1,
+   "objects": {
+    "bake_ceiling__ceiling": {
+     "area_m2": 4921.7,
+     "texels_per_m": 14.8
+    },
+    "bake_desks__desk": {
+     "area_m2": 568.4,
+     "texels_per_m": 12.1
+    },
+    "bake_drum_2420__drum": {
+     "area_m2": 311.2,
+     "texels_per_m": 14.8
+    },
+    "bake_walls__slats": {
+     "area_m2": 348.5,
+     "texels_per_m": 13.5
+    },
+    "bake_drum_2220__drum": {
+     "area_m2": 253.9,
+     "texels_per_m": 14.8
+    },
+    "bake_drum_2230__drum": {
+     "area_m2": 253.9,
+     "texels_per_m": 14.8
+    },
+    "bake_tiers_2430__tierCarpet": {
+     "area_m2": 534.1,
+     "texels_per_m": 9.6
+    },
+    "bake_drumin_2430__drumIn3": {
+     "area_m2": 299.1,
+     "texels_per_m": 12.1
+    },
+    "bake_drumin_2220__drumIn6": {
+     "area_m2": 241.7,
+     "texels_per_m": 12.1
+    },
+    "bake_drumin_2210__drumIn5": {
+     "area_m2": 241.7,
+     "texels_per_m": 12.1
+    },
+    "bake_room_2410__roomCarpet": {
+     "area_m2": 164.9,
+     "texels_per_m": 12.1
+    },
+    "bake_room_2220__roomCarpet": {
+     "area_m2": 110.9,
+     "texels_per_m": 12.1
+    },
+    "bake_bein_curtain__velvet": {
+     "area_m2": 75.2,
+     "texels_per_m": 13.5
+    },
+    "bake_transom__silver": {
+     "area_m2": 66.6,
+     "texels_per_m": 9.6
+    },
+    "bake_tiers_2410__stepEdge": {
+     "area_m2": 57.8,
+     "texels_per_m": 9.6
+    },
+    "bake_tiers_2200__stepEdge": {
+     "area_m2": 25.5,
+     "texels_per_m": 9.6
+    },
+    "bake_tiers_2230__stepEdge": {
+     "area_m2": 9.9,
+     "texels_per_m": 9.6
+    }
+   }
+  },
+  {
+   "index": 2,
+   "objects": {
+    "bake_walls__white": {
+     "area_m2": 4363.9,
+     "texels_per_m": 8.1
+    },
+    "bake_walls__sage": {
+     "area_m2": 1328.6,
+     "texels_per_m": 8.1
+    },
+    "bake_mullions__mullion": {
+     "area_m2": 1332.5,
+     "texels_per_m": 5.1
+    },
+    "bake_drum_2400__drum": {
+     "area_m2": 378.6,
+     "texels_per_m": 8.9
+    },
+    "bake_drum_2430__drum": {
+     "area_m2": 311.2,
+     "texels_per_m": 8.9
+    },
+    "bake_tiers_2400__tierCarpet": {
+     "area_m2": 670.2,
+     "texels_per_m": 5.7
+    },
+    "bake_coves__ceiling": {
+     "area_m2": 372.7,
+     "texels_per_m": 7.2
+    },
+    "bake_tiers_2410__tierCarpet": {
+     "area_m2": 534.1,
+     "texels_per_m": 5.7
+    },
+    "bake_drumin_2200__drumIn4": {
+     "area_m2": 302.4,
+     "texels_per_m": 7.2
+    },
+    "bake_soffit_edge__ceiling": {
+     "area_m2": 181.5,
+     "texels_per_m": 8.9
+    },
+    "bake_room_2200__roomCarpet": {
+     "area_m2": 166.7,
+     "texels_per_m": 7.2
+    },
+    "bake_room_2430__roomCarpet": {
+     "area_m2": 164.9,
+     "texels_per_m": 7.2
+    },
+    "bake_tiers_2200__tierCarpet": {
+     "area_m2": 245.7,
+     "texels_per_m": 5.7
+    },
+    "bake_terrace_soffit__ceiling": {
+     "area_m2": 127.0,
+     "texels_per_m": 6.3
+    },
+    "bake_tiers_2210__tierCarpet": {
+     "area_m2": 67.3,
+     "texels_per_m": 5.7
+    },
+    "bake_tiers_2420__stepEdge": {
+     "area_m2": 57.8,
+     "texels_per_m": 5.7
+    },
+    "bake_bein_mural_back__mural": {
+     "area_m2": 23.2,
+     "texels_per_m": 8.1
+    }
+   }
+  },
+  {
+   "index": 3,
+   "objects": {
+    "bake_lawn__lawn": {
+     "area_m2": 1646.1,
+     "texels_per_m": 19.5
+    },
+    "bake_canopy__canopy": {
+     "area_m2": 2307.7,
+     "texels_per_m": 15.9
+    },
+    "bake_columns__column": {
+     "area_m2": 542.0,
+     "texels_per_m": 19.5
+    },
+    "bake_paving__paving": {
+     "area_m2": 442.8,
+     "texels_per_m": 19.5
+    },
+    "bake_drum_2200__drum": {
+     "area_m2": 314.8,
+     "texels_per_m": 17.4
+    },
+    "bake_drum_2410__drum": {
+     "area_m2": 311.2,
+     "texels_per_m": 17.4
+    },
+    "bake_fascia__canopy": {
+     "area_m2": 347.2,
+     "texels_per_m": 15.9
+    },
+    "bake_drum_2210__drum": {
+     "area_m2": 253.9,
+     "texels_per_m": 17.4
+    },
+    "bake_tiers_2420__tierCarpet": {
+     "area_m2": 534.1,
+     "texels_per_m": 11.3
+    },
+    "bake_bein_ceiling__ceiling": {
+     "area_m2": 245.3,
+     "texels_per_m": 15.9
+    },
+    "bake_drumin_2420__drumIn2": {
+     "area_m2": 299.1,
+     "texels_per_m": 14.2
+    },
+    "bake_room_2400__roomCarpet": {
+     "area_m2": 234.0,
+     "texels_per_m": 14.2
+    },
+    "bake_room_2420__roomCarpet": {
+     "area_m2": 164.9,
+     "texels_per_m": 14.2
+    },
+    "bake_room_2230__roomCarpet": {
+     "area_m2": 110.9,
+     "texels_per_m": 14.2
+    },
+    "bake_doorframes__steel": {
+     "area_m2": 107.0,
+     "texels_per_m": 12.3
+    },
+    "bake_tiers_2220__tierCarpet": {
+     "area_m2": 67.3,
+     "texels_per_m": 11.3
+    },
+    "bake_tiers_2430__stepEdge": {
+     "area_m2": 57.8,
+     "texels_per_m": 11.3
+    },
+    "bake_bein_column__column": {
+     "area_m2": 11.6,
+     "texels_per_m": 15.9
+    },
+    "bake_tiers_2210__stepEdge": {
+     "area_m2": 9.9,
+     "texels_per_m": 11.3
+    }
+   }
+  }
+ ],
+ "timings_s": {
+  "lm0": 369,
+  "sun0": 14,
+  "ao0": 31,
+  "lm1": 341,
+  "sun1": 28,
+  "ao1": 20,
+  "lm2": 152,
+  "sun2": 31,
+  "ao2": 31,
+  "lm3": 294,
+  "sun3": 34,
+  "ao3": 30
+ },
+ "glb_bytes": 806648,
+ "wall_time_s": 1403
+}

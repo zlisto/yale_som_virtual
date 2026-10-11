@@ -1,0 +1,9 @@
+{
+  "name": "som-bake-tools",
+  "private": true,
+  "type": "module",
+  "description": "Headless screenshot and fps tools for the lightmap bake (tools/bake/README in bake.py header)",
+  "dependencies": {
+    "puppeteer-core": "23.11.1"
+  }
+}

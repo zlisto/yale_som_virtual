@@ -1,0 +1,55 @@
+/* Egg set A (Froggy, Lisa, library portraits, dump trap). Only body-class switches on the shared dialogue. */
+
+/* waitThen(): three bouncing dots in place of text while Lisa thinks or the boss agent routes */
+body.egg-thinking .dlg-text::before {
+  content: '';
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin: 0.6em 0 0 22px;
+  border-radius: 50%;
+  animation: egg-dots 1s steps(1) infinite;
+}
+body.egg-thinking .dlg-next {
+  visibility: hidden;
+}
+body.egg-routing .dlg-text {
+  font-family: var(--ui-mono, monospace);
+  font-size: 15px;
+}
+body.egg-routing .dlg-next {
+  visibility: hidden;
+}
+@keyframes egg-dots {
+  0% {
+    background: #ff4fa355;
+    box-shadow: -18px 0 0 #ff4fa3, 18px 0 0 #ff4fa355;
+  }
+  33% {
+    background: #ff4fa3;
+    box-shadow: -18px 0 0 #ff4fa355, 18px 0 0 #ff4fa355;
+  }
+  66% {
+    background: #ff4fa355;
+    box-shadow: -18px 0 0 #ff4fa355, 18px 0 0 #ff4fa3;
+  }
+}
+
+/* the speaker's portrait before the name (dialogue line field `avatar`, src/ui/portraits.js draws
+   the pink ring into the picture) */
+.dlg-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  box-shadow: 0 0 14px rgba(255, 79, 163, 0.35);
+  flex: none;
+}
+.dlg-avatar.empty {
+  display: inline-block;
+  background: linear-gradient(#1b2440, #0b0b0d);
+  border: 2px solid var(--ui-pink, #ff4fa3);
+  box-sizing: border-box;
+}
+.dlg-avatar + .dlg-speaker {
+  margin: 0 auto 0 12px;
+}

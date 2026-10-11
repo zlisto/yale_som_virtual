@@ -1,0 +1,15 @@
+{
+ "scale": 3.0,
+ "lightmaps": [
+  "lm0.png",
+  "lm1.png",
+  "lm2.png",
+  "lm3.png"
+ ],
+ "ao": [
+  "ao0.jpg",
+  "ao1.jpg",
+  "ao2.jpg",
+  "ao3.jpg"
+ ]
+}

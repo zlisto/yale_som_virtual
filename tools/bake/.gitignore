@@ -1,0 +1,6 @@
+node_modules/
+# intermediate export, rebuilt by export-building.mjs
+building.glb
+# float bakes before encoding
+out/
+__pycache__/

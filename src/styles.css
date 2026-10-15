@@ -63,7 +63,8 @@ body,
   height: auto;
 }
 
-.maptoggle {
+.maptoggle,
+.musictoggle {
   position: fixed;
   right: 16px;
   top: 16px;
@@ -248,4 +249,8 @@ body,
   .card h1 {
     font-size: 38px;
   }
+}
+
+.musictoggle {
+  right: 112px;
 }

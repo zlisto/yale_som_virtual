@@ -4,7 +4,11 @@ import World from './World.jsx'
 import Player from './Player.jsx'
 import Minimap from './Minimap.jsx'
 import TouchControls from './TouchControls.jsx'
-import { EYE, SPAWN } from './layout.js'
+import Portal from './Portal.jsx'
+import { EYE, PORTAL, SPAWN } from './layout.js'
+import { onIdentity, presence } from './mvw.js'
+import { setMuted } from './audio.js'
+import { startSong } from './song.js'
 
 export default function App() {
   const [locked, setLocked] = useState(false)
@@ -13,7 +17,12 @@ export default function App() {
   const lockRef = useRef()
   const mapRef = useRef()
   const onLock = useCallback((v) => setLocked(v), [])
-  const onWhere = useCallback((w) => setWhere(w), [])
+  const onWhere = useCallback((w) => {
+    setWhere(w)
+    presence(w)
+  }, [])
+  const [me, setMe] = useState(null) // who's visiting, from the Metaverse Browser
+  useEffect(() => onIdentity(setMe), [])
   // phones have no pointer lock, so they get a joystick + drag-to-look instead
   const [isTouch] = useState(() => matchMedia('(pointer: coarse)').matches) // phones + tablets; touchscreen laptops still get mouse mode
   const [touchOn, setTouchOn] = useState(false)
@@ -24,6 +33,17 @@ export default function App() {
     setTouchOn(on)
   }
   const playing = locked || touchOn
+  // music starts the first time you walk in (browsers need a click first); N or the button mutes it
+  const [musicOn, setMusicOn] = useState(true)
+  useEffect(() => {
+    if (playing) startSong()
+  }, [playing])
+  useEffect(() => setMuted(!musicOn), [musicOn])
+  useEffect(() => {
+    const n = (e) => e.code === 'KeyN' && setMusicOn((v) => !v)
+    window.addEventListener('keydown', n)
+    return () => window.removeEventListener('keydown', n)
+  }, [])
   useEffect(() => {
     const k = (e) => e.code === 'KeyM' && setShowMap((v) => !v)
     window.addEventListener('keydown', k)
@@ -37,6 +57,7 @@ export default function App() {
         dpr={[1, 1.75]}
       >
         <World />
+        {PORTAL.on && <Portal {...PORTAL} label="Darul Kebab" sub="Cambridge · portal" />}
         <Player lockRef={lockRef} mapRef={mapRef} touchRef={touchRef} onLock={onLock} onWhere={onWhere} />
       </Canvas>
 
@@ -47,6 +68,9 @@ export default function App() {
       <div className={showMap ? 'mapwrap' : 'mapwrap hidden'}>
         <Minimap drawRef={mapRef} />
       </div>
+      <button className="musictoggle" onClick={() => setMusicOn((v) => !v)}>
+        {musicOn ? '♪ music on' : '♪ music off'}
+      </button>
       <button className="maptoggle" onClick={() => setShowMap((s) => !s)}>
         {showMap ? 'hide map' : 'map'}
       </button>
@@ -56,7 +80,7 @@ export default function App() {
       {!playing && (
         <div className="overlay" onClick={() => (isTouch ? setTouch(true) : lockRef.current?.())}>
           <div className="card">
-            <div className="kicker">Yale SOM · Evans Hall</div>
+            <div className="kicker">Yale SOM · Evans Hall{me?.name ? ` · visiting as ${me.name}` : ''}</div>
             <h1>Floor 2</h1>
             <p className="sub">Classroom drums, the cloister, Ross Library, the Beinecke Terrace Room, and the courtyard.</p>
             <button className="go">{isTouch ? 'Tap to walk in' : 'Click to walk in'}</button>
@@ -84,6 +108,7 @@ export default function App() {
                 <span><b>Space</b> jump</span>
                 <span><b>C</b> crouch</span>
                 <span><b>M</b> map</span>
+                <span><b>N</b> music</span>
                 <span><b>Esc</b> pause</span>
               </div>
             )}

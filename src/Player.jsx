@@ -26,7 +26,7 @@ export default function Player({ lockRef, mapRef, touchRef, onLock, onWhere }) {
 
   useEffect(() => {
     camera.position.set(SPAWN.x, EYE, SPAWN.z)
-    camera.rotation.set(0, 0, 0)
+    camera.rotation.set(0, SPAWN.yaw ?? 0, 0, 'YXZ')
     lockRef.current = () => controls.lock()
     const on = () => onLock(true)
     const off = () => {

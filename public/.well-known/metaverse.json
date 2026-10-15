@@ -1,0 +1,18 @@
+{
+  "protocol": "mvw/0.1",
+  "name": "Yale SOM · Evans Hall, Floor 2",
+  "description": "The second floor of Edward P. Evans Hall at the Yale School of Management: classroom drums with lectures in progress, the glass cloister around the courtyard, Ross Library, and the Beinecke Terrace Room.",
+  "spawns": {
+    "default": "Southwest corner by the Class of 1980 classroom, facing north up the west cloister",
+    "darul_kebab_portal": "In the west cloister, just south of the Darul Kebab portal, facing south"
+  },
+  "portals": [
+    {
+      "id": "to_darul_kebab",
+      "label": "Darul Kebab",
+      "href": "https://zlisto.github.io/darul_kebab/",
+      "spawn": "front_door",
+      "where": "A glowing doorway standing in the west cloister"
+    }
+  ]
+}

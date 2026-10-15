@@ -1,3 +1,5 @@
+import { pickSpawn } from './mvw.js'
+
 // Evans Hall, floor 2. Units are meters.
 // World axes: +x = east, -z = north (three.js camera looks -z by default = north).
 // Read from reference/floorplan (plan is drawn with west at the top).
@@ -5,7 +7,24 @@
 export const H = 4.6 // ceiling height
 export const EYE = 1.65
 export const R_PLAYER = 0.35
-export const SPAWN = { x: -24.4, z: 22 } // SW corner by Class of 1980, facing north (photo 1)
+// arrival points (mvw/0.1, see ../PROTOCOL.md): ?spawn=<id> picks one
+export const SPAWNS = {
+  default: { x: -24.4, z: 22, yaw: 0 }, // SW corner by Class of 1980, facing north (photo 1)
+  darul_kebab_portal: { x: -24.4, z: 15.8, yaw: Math.PI }, // just stepped out of the portal, facing south
+}
+export const SPAWN = pickSpawn(SPAWNS)
+
+// portal to Darul Kebab, standing in the west cloister (the local copy while developing, the live one once deployed)
+export const PORTAL = {
+  x: -24.4,
+  z: 14,
+  w: 2,
+  h: 2.6,
+  href: import.meta.env.DEV ? 'http://localhost:5174/' : 'https://zlisto.github.io/darul_kebab/',
+  spawn: 'front_door',
+  back: 'darul_kebab_portal',
+  on: true,
+}
 
 // corridors are 25% wider than the first pass (gaps 2.5 m, cloister ~7 m, back halls ~4.4 m)
 export const BOUNDS = { xMin: -40.75, xMax: 28.75, zMin: -48.3, zMax: 48.3 }
@@ -285,6 +304,8 @@ W([6.2, -20.8], [8.2, -20.8], 'orange', { h: 0.55, t: 0.9 })
 W([-6.2, 20.8], [-4.2, 20.8], 'orange', { h: 0.55, t: 0.9 })
 W([-CW, 6], [-CW, 8], 'orange', { h: 0.55, t: 0.9 })
 for (const p of PLANTS) dot(p)
+// portal posts
+if (PORTAL.on) for (const s of [-1, 1]) dot([PORTAL.x + s * (PORTAL.w / 2 + 0.05), PORTAL.z])
 
 // colliders with bounding boxes for fast rejection
 export const COLLIDERS = WALLS.filter((w) => w.collide).map((w) => ({

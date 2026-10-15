@@ -43,6 +43,8 @@ Open http://localhost:5173 and click **Click to walk in**.
 - `src/LabubuCrowd.jsx`: 30 seated Labubu students per classroom, drawn with shared instanced meshes.
 - `src/Professor.jsx` + `src/Faculty.jsx`: cartoon Hogwarts professors teaching each class (Dumbledore, McGonagall, Trelawney, Slughorn, Snape, Lockhart, Moody, Flitwick), plus Hagrid in the courtyard.
 - `src/HandsomeDan.jsx`: Handsome Dan touring a loop of 1000 randomly chosen classrooms (blue dot on the map).
+- `src/mvw.js`, `src/Portal.jsx`: the [Metaverse Web](https://github.com/zlisto/darul_kebab#readme) protocol. A glowing portal in the west cloister takes you to [Darul Kebab](https://zlisto.github.io/darul_kebab/); `?spawn=` picks where you arrive, and `public/.well-known/metaverse.json` describes the floor to browsers and AI agents.
+- `src/audio.js`, `src/song.js`: a calm lo-fi soundtrack and the portal whoosh, synthesized with Web Audio (N mutes).
 
 The layout is estimated from the wayfinding plan posted on the floor, so room sizes are approximate. The Stair G painting comes from a photo; the other stairwell paintings are made up.
 

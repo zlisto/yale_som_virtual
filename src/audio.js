@@ -40,6 +40,11 @@ export function audio() {
     noise = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate)
     const d = noise.getChannelData(0)
     for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1
+    // arriving through a portal there's no start-screen click, so the browser may hold audio
+    // until the first key or click; resume then
+    const unlock = () => ctx.state === 'suspended' && ctx.resume()
+    addEventListener('keydown', unlock)
+    addEventListener('pointerdown', unlock)
   }
   if (ctx.state === 'suspended') ctx.resume()
   return ctx
